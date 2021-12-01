@@ -24,7 +24,7 @@ class InventoryItemInfo(object):
         return False
 
     def purchase(self, amount):
-        if amount < 0:
+        if amount > 0:
             if self.__stock >= amount:
                 self.__stock -= amount
                 return True

@@ -3,7 +3,7 @@ from inventory import *
 import os
 
 
-def create_inventory():
+def process_inventory():
     os.chdir('MIS_304/finalProject/MIS304_final_project')
     print(os.getcwd())
     file = open("Inventory.txt", "r")
@@ -24,11 +24,23 @@ def create_inventory():
         inventory.append(p)
     return inventory
     
-def menu(inventory):
+def print_inventory(inventory):
     print("{:<5}{:<30}{:<10}{}".format("ID", "Item", "Price", "Qty Available"))
     for i in inventory:
         print("{:<5}{:<30}{:<10}{}".format(i.get_id(), i.get_name(), i.get_price(), i.get_stock()))
     print("Enter 0 when finished.\n")
+
+def get_item_id(inventory):
+    try:
+        itemID = int(input("Enter the ID of the item you would like to purchase/return: "))
+        if itemID == 0:
+            return 0
+        elif not checkExistence(inventory, itemID):
+            print("Input was invalid.")
+            return None
+    except ValueError:
+        print("Input was invalid.")
+    return itemID
 
 def checkExistence(inventory, item_id):
     for i in inventory:
@@ -39,55 +51,70 @@ def checkExistence(inventory, item_id):
 def retrieveItem(inventory, item_id):
     for i in range(len(inventory)):
         if inventory[i].get_id() == item_id:
+            return inventory[i]
+    return None
+
+def retrieveTransaction(transactions, item_id):
+    for i in range(len(transactions)):
+        if transactions[i].get_id() == item_id:
             return i
     return None
+
+def write_updated_inventory(inventory):
+    file = open("UpdatedInventory.txt", "w")
+    for i in inventory:
+        file.write(str(i.get_id()) + "\n")
+        file.write(str(i.get_name()) + "\n")
+        file.write(str(i.get_price()) + "\n")
+        file.write(str(i.get_stock()) + "\n")
+    file.close()
+
 
 def purchase(inventory):
     purchase_flag = True
     transactions = []
     while purchase_flag:
         try:
-            menu(inventory)
-            itemID = int(input("Enter the ID of the item you would like to purchase/return: "))
+            print_inventory(inventory)
+            itemID = get_item_id(inventory)
             if itemID == 0:
                 purchase_flag = False
-            elif checkExistence(inventory, itemID):
-                index = retrieveItem(inventory, itemID)
-                item = inventory[index]
+            elif itemID:
+                item = retrieveItem(inventory, itemID)
                 quantity = int(input("Enter the quantity (negative for return): "))
                 if quantity > 0:
                     if not item.purchase(quantity):
                         print("Sorry we don't have enough stock")
                     else:
-                        item.purchase(quantity)
-                        name = inventory[itemID].get_name()
-                        price = inventory[itemID].get_price()
+                        name = item.get_name()
+                        price = item.get_price()
                         transItem = TransactionItem(itemID, name, price, 0)
                         transItem.set_quantity(transItem.get_quantity() + quantity)
                         transactions.append(transItem) 
                 else:
-                    inventory[index].restock(abs(quantity))
-            else:
-                print("Input was invalid.")
+                    item.restock(abs(quantity))
+                    t = retrieveTransaction(transactions, )
         except ValueError:
             print("Input was invalid.")
+    write_updated_inventory(inventory)
     return transactions
         
-def invoice(transactions):
+def print_invoice(transactions):
     print("{:<5}{:<30}{:<10}{}".format("ID", "Item", "Price", "Total"))
     for i in transactions:
-        print("{:<5}{:<30}{:<10}{}".format(i.get_id(), i.get_name(), i.get_price(), i.get_quantity() * i.get_price()))
-    total = sum([i.get_price() for i in transactions])
+        if i.get_quantity() > 0:
+            print("{:<5}{:<30}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_price(), i.calc_cost()))
+    total = sum([i.calc_cost() for i in transactions])
     tax = total * 0.0825
     print("Price: ${:.2f}".format(total))
     print("Tax: ${:.2f}".format(tax))
     print("Total: ${:.2f}".format(total + tax))
 
 def main():
-    inventory = create_inventory()
-    menu(inventory)
+    inventory = process_inventory()
+    print_inventory(inventory)
     purchases = purchase(inventory)
-    invoice(purchases)
+    print_invoice(purchases)
     
 
 if __name__ == '__main__':
