@@ -1,9 +1,9 @@
-class InventoryInfo(object):
+class InventoryItemInfo(object):
     def __init__(self, id, name, stock, price):
-        self.__id = id
+        self.__id = int(id)
         self.__name = name
-        self.__stock = stock
-        self.__price = price
+        self.__stock = int(stock)
+        self.__price = float(price)
 
     def get_id(self):
         return self.__id
@@ -24,7 +24,7 @@ class InventoryInfo(object):
         return False
 
     def purchase(self, amount):
-        if amount > 0:
+        if amount < 0:
             if self.__stock >= amount:
                 self.__stock -= amount
                 return True
