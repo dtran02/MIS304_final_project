@@ -2,7 +2,6 @@ from transaction import *
 from inventory import *
 import os
 
-
 def process_inventory():
     os.chdir('MIS_304/finalProject/MIS304_final_project')
     print(os.getcwd())
@@ -31,15 +30,17 @@ def print_inventory(inventory):
     print("Enter 0 when finished.\n")
 
 def get_item_id(inventory):
-    try:
-        itemID = int(input("Enter the ID of the item you would like to purchase/return: "))
-        if itemID == 0:
-            return 0
-        elif not checkExistence(inventory, itemID):
-            print("Input was invalid.")
+    
+    itemID = input("Enter the ID of the item you would like to purchase/return: ")
+    if itemID == 0:
+        return 0
+    elif not checkExistence(inventory, itemID):
+        return None
+    else:
+        try:
+            itemID = int(itemID)
+        except Exception as err:
             return None
-    except ValueError:
-        print("Input was invalid.")
     return itemID
 
 def checkExistence(inventory, item_id):
@@ -69,31 +70,29 @@ def purchase(inventory):
     purchase_flag = True
     transactions = []
     while purchase_flag:
-        try:
-            print_inventory(inventory)
-            itemID = get_item_id(inventory)
-            if itemID == 0:
-                purchase_flag = False
-            elif itemID:
-                item = retrieveItem(inventory, itemID)
-                quantity = int(input("Enter the quantity (negative for return): "))
-                if quantity < 0:
-                    name = item.get_name()
-                    price = item.get_price()
-                    transItem = TransactionItem(itemID, name, price, 0)
-                    transItem.set_quantity(transItem.get_quantity() + quantity)
-                    transactions.append(transItem) 
-                    item.restock(abs(quantity))
-                elif not item.purchase(quantity):
-                    print("Sorry we don't have enough stock")
-                elif quantity > 0:
-                    name = item.get_name()
-                    price = item.get_price()
-                    transItem = TransactionItem(itemID, name, price, 0)
-                    transItem.set_quantity(transItem.get_quantity() + quantity)
-                    transactions.append(transItem) 
-                
-        except ValueError:
+        print_inventory(inventory)
+        itemID = get_item_id(inventory)
+        if itemID == 0:
+            purchase_flag = False
+        elif itemID:
+            item = retrieveItem(inventory, itemID)
+            quantity = int(input("Enter the quantity (negative for return): "))
+            if quantity < 0:
+                name = item.get_name()
+                price = item.get_price()
+                transItem = TransactionItem(itemID, name, price, 0)
+                transItem.set_quantity(transItem.get_quantity() + quantity)
+                transactions.append(transItem) 
+                item.restock(abs(quantity))
+            elif not item.purchase(quantity):
+                print("Sorry we don't have enough stock")
+            elif quantity > 0:
+                name = item.get_name()
+                price = item.get_price()
+                transItem = TransactionItem(itemID, name, price, 0)
+                transItem.set_quantity(transItem.get_quantity() + quantity)
+                transactions.append(transItem) 
+        else:
             print("Input was invalid.")
     write_updated_inventory(inventory)
     return transactions
