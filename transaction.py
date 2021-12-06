@@ -11,26 +11,26 @@ class TransactionItem(object):
     def get_id(self):
         return self.__id
 
-    def set_id(self, item_id):
-        self.__id = item_id
+    def set_id(self, new_id):
+        self.__id = new_id
 
     def get_name(self):
         return self.__name
 
-    def set_name(self, item_name):
-        self.__name = item_name
+    def set_name(self, new_name):
+        self.__name = new_name
 
     def get_price(self):
         return self.__price
 
-    def set_price(self, item_price):
-        self.__price = item_price
+    def set_price(self, new_price):
+        self.__price = new_price
     
-    def get_quantity(self):
+    def get_qty(self):
         return self.__quantity
 
-    def set_quantity(self, item_quantity):
-        self.__quantity = item_quantity
+    def set_qty(self, new_qty):
+        self.__quantity = new_qty
 
     def calc_cost(self):
         return self.__price * self.__quantity
