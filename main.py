@@ -82,15 +82,6 @@ def purchase(inventory):
             elif itemID:
                 item = retrieveItem(inventory, itemID)
                 quantity = int(input("Enter the quantity (negative for return): "))
-                
-                if not item.purchase(quantity):
-                    print("Sorry we don't have enough stock")
-                elif quantity > 0:
-                    name = item.get_name()
-                    price = item.get_price()
-                    transItem = TransactionItem(itemID, name, price, 0)
-                    transItem.set_quantity(transItem.get_quantity() + quantity)
-                    transactions.append(transItem) 
                 if quantity < 0:
                     name = item.get_name()
                     price = item.get_price()
@@ -98,6 +89,15 @@ def purchase(inventory):
                     transItem.set_quantity(transItem.get_quantity() + quantity)
                     transactions.append(transItem) 
                     item.restock(abs(quantity))
+                elif not item.purchase(quantity):
+                    print("Sorry we don't have enough stock")
+                elif quantity > 0:
+                    name = item.get_name()
+                    price = item.get_price()
+                    transItem = TransactionItem(itemID, name, price, 0)
+                    transItem.set_quantity(transItem.get_quantity() + quantity)
+                    transactions.append(transItem) 
+                
         except ValueError:
             print("Input was invalid.")
     write_updated_inventory(inventory)
