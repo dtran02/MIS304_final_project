@@ -3,10 +3,10 @@ class TransactionItem(object):
     TransactionItem class
     """
     def __init__(self, item_id, item_name, item_price, item_quantity):
-        self.__id = item_id
+        self.__id = int(item_id)
         self.__name = item_name
-        self.__price = item_price
-        self.__quantity = item_quantity
+        self.__price = float(item_price)
+        self.__quantity = int(item_quantity)
 
     def get_id(self):
         return self.__id

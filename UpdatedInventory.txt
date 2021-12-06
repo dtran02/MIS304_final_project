@@ -1,11 +1,11 @@
 244
 Large Cake Pan
 19.99
-5
+1
 576
 Assorted Sprinkles
 12.89
-3
+0
 212
 Deluxe Icing Set
 37.97
@@ -21,8 +21,8 @@ Cupcake Display Board
 285
 Bakery Boxes
 8.59
-8
+7
 736
 Mixer
 136.94
-5
+1

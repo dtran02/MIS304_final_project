@@ -54,11 +54,6 @@ def retrieveItem(inventory, item_id):
             return inventory[i]
     return None
 
-def retrieveTransaction(transactions, item_id):
-    for i in range(len(transactions)):
-        if transactions[i].get_id() == item_id:
-            return i
-    return None
 
 def write_updated_inventory(inventory):
     file = open("UpdatedInventory.txt", "w")
@@ -104,14 +99,17 @@ def purchase(inventory):
     return transactions
         
 def print_invoice(transactions):
-    print("{:<5}{:<30}{:<10}{:<10}{}".format("ID", "Item", "Quantity", "Price", "Total"))
-    for i in transactions:
-        print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_quantity(), i.get_price(), i.calc_cost()))
-    total = sum([i.calc_cost() for i in transactions])
-    tax = total * 0.0825
-    print("Price: ${:.2f}".format(total))
-    print("Tax: ${:.2f}".format(tax))
-    print("Total: ${:.2f}".format(total + tax))
+    if len(transactions) == 0:
+        print("Thank you for your visit!")
+    else:
+        print("{:<5}{:<30}{:<10}{:<10}{}".format("ID", "Item", "Quantity", "Price", "Total"))
+        for i in transactions:
+            print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_quantity(), i.get_price(), i.calc_cost()))
+        total = sum([i.calc_cost() for i in transactions])
+        tax = total * 0.0825
+        print("Price: ${:.2f}".format(total))
+        print("Tax: ${:.2f}".format(tax))
+        print("Total: ${:.2f}".format(total + tax))
 
 def main():
     inventory = process_inventory()
