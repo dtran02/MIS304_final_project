@@ -112,7 +112,6 @@ def print_invoice(transactions):
 
 def main():
     inventory = process_inventory()
-    print_inventory(inventory)
     purchases = purchase(inventory)
     print_invoice(purchases)
     
