@@ -82,28 +82,31 @@ def purchase(inventory):
             elif itemID:
                 item = retrieveItem(inventory, itemID)
                 quantity = int(input("Enter the quantity (negative for return): "))
-                if quantity > 0:
-                    if not item.purchase(quantity):
-                        print("Sorry we don't have enough stock")
-                    else:
-                        name = item.get_name()
-                        price = item.get_price()
-                        transItem = TransactionItem(itemID, name, price, 0)
-                        transItem.set_quantity(transItem.get_quantity() + quantity)
-                        transactions.append(transItem) 
-                else:
+                
+                if not item.purchase(quantity):
+                    print("Sorry we don't have enough stock")
+                elif quantity > 0:
+                    name = item.get_name()
+                    price = item.get_price()
+                    transItem = TransactionItem(itemID, name, price, 0)
+                    transItem.set_quantity(transItem.get_quantity() + quantity)
+                    transactions.append(transItem) 
+                if quantity < 0:
+                    name = item.get_name()
+                    price = item.get_price()
+                    transItem = TransactionItem(itemID, name, price, 0)
+                    transItem.set_quantity(transItem.get_quantity() + quantity)
+                    transactions.append(transItem) 
                     item.restock(abs(quantity))
-                    t = retrieveTransaction(transactions, )
         except ValueError:
             print("Input was invalid.")
     write_updated_inventory(inventory)
     return transactions
         
 def print_invoice(transactions):
-    print("{:<5}{:<30}{:<10}{}".format("ID", "Item", "Price", "Total"))
+    print("{:<5}{:<30}{:<10}{:<10}{}".format("ID", "Item", "Quantity", "Price", "Total"))
     for i in transactions:
-        if i.get_quantity() > 0:
-            print("{:<5}{:<30}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_price(), i.calc_cost()))
+        print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_quantity(), i.get_price(), i.calc_cost()))
     total = sum([i.calc_cost() for i in transactions])
     tax = total * 0.0825
     print("Price: ${:.2f}".format(total))
