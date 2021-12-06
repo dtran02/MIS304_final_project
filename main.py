@@ -81,7 +81,7 @@ def purchase(inventory):
                 name = item.get_name()
                 price = item.get_price()
                 transItem = TransactionItem(itemID, name, price, 0)
-                transItem.set_quantity(transItem.get_quantity() + quantity)
+                transItem.set_qty(transItem.get_qty() + quantity)
                 transactions.append(transItem) 
                 item.restock(abs(quantity))
             elif not item.purchase(quantity):
@@ -90,7 +90,7 @@ def purchase(inventory):
                 name = item.get_name()
                 price = item.get_price()
                 transItem = TransactionItem(itemID, name, price, 0)
-                transItem.set_quantity(transItem.get_quantity() + quantity)
+                transItem.set_qty(transItem.get_qty() + quantity)
                 transactions.append(transItem) 
         else:
             print("Input was invalid.")
@@ -103,7 +103,7 @@ def print_invoice(transactions):
     else:
         print("{:<5}{:<30}{:<10}{:<10}{}".format("ID", "Item", "Quantity", "Price", "Total"))
         for i in transactions:
-            print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_quantity(), i.get_price(), i.calc_cost()))
+            print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_qty(), i.get_price(), i.calc_cost()))
         total = sum([i.calc_cost() for i in transactions])
         tax = total * 0.0825
         print("Price: ${:.2f}".format(total))
