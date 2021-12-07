@@ -37,24 +37,16 @@ def get_item_id(inventory):
         return None
     if itemID == 0:
         return 0
-    elif not checkExistence(inventory, itemID):
-        return None
+    elif retrieveItem(inventory, itemID):
+        return retrieveItem(inventory, itemID).get_id()
     else:
-        
-        return itemID
-
-def checkExistence(inventory, item_id):
-    for i in inventory:
-        if i.get_id() == item_id:
-            return True
-    return False
+        return None
 
 def retrieveItem(inventory, item_id):
     for i in range(len(inventory)):
         if inventory[i].get_id() == item_id:
             return inventory[i]
-    return None
-
+    return False
 
 def write_updated_inventory(inventory):
     file = open("UpdatedInventory.txt", "w")
@@ -94,7 +86,6 @@ def purchase(inventory):
                 transactions.append(transItem) 
         else:
             print("Input was invalid.")
-            print(itemID, type(itemID))
     write_updated_inventory(inventory)
     return transactions
         
