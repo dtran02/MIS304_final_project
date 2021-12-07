@@ -30,18 +30,18 @@ def print_inventory(inventory):
     print("Enter 0 when finished.\n")
 
 def get_item_id(inventory):
-    
     itemID = input("Enter the ID of the item you would like to purchase/return: ")
+    try:
+        itemID = int(itemID)
+    except Exception as err:
+        return None
     if itemID == 0:
         return 0
     elif not checkExistence(inventory, itemID):
         return None
     else:
-        try:
-            itemID = int(itemID)
-        except Exception as err:
-            return None
-    return itemID
+        
+        return itemID
 
 def checkExistence(inventory, item_id):
     for i in inventory:
@@ -61,8 +61,8 @@ def write_updated_inventory(inventory):
     for i in inventory:
         file.write(str(i.get_id()) + "\n")
         file.write(str(i.get_name()) + "\n")
-        file.write(str(i.get_price()) + "\n")
         file.write(str(i.get_stock()) + "\n")
+        file.write(str(i.get_price()) + "\n")
     file.close()
 
 
@@ -74,7 +74,7 @@ def purchase(inventory):
         itemID = get_item_id(inventory)
         if itemID == 0:
             purchase_flag = False
-        elif itemID:
+        elif itemID != None:
             item = retrieveItem(inventory, itemID)
             quantity = int(input("Enter the quantity (negative for return): "))
             if quantity < 0:
@@ -94,6 +94,7 @@ def purchase(inventory):
                 transactions.append(transItem) 
         else:
             print("Input was invalid.")
+            print(itemID, type(itemID))
     write_updated_inventory(inventory)
     return transactions
         
@@ -105,7 +106,7 @@ def print_invoice(transactions):
         for i in transactions:
             print("{:<5}{:<30}{:<10}{:<10}{:.2f}".format(i.get_id(), i.get_name(), i.get_qty(), i.get_price(), i.calc_cost()))
         total = sum([i.calc_cost() for i in transactions])
-        tax = total * 0.0825
+        tax = total * 0.085
         print("Price: ${:.2f}".format(total))
         print("Tax: ${:.2f}".format(tax))
         print("Total: ${:.2f}".format(total + tax))
